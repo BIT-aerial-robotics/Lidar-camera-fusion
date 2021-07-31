@@ -1,3 +1,4 @@
+#图像缩放到一张纸上不改变长宽比
 # *_* coding : UTF-8 *_*
 import os
 import cv2
