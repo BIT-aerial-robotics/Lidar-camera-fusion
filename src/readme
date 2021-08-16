@@ -1,0 +1,13 @@
+815 is the version completed last week written by me.
+problems:
+1 It has a bug about 'z'.
+2 How to put the result from array Dx into cv::Mat form a picture.
+3 Is the mask continuous or discrete when scanned in picture? (I set it as discrete now)
+
+
+816 is the version from given upsample code written today and has problems with variables 'dim' and 'sd'.
+problems:
+1 meanings of the two variables and how to add them.
+
+Next:
+I need to choose one to debug.
