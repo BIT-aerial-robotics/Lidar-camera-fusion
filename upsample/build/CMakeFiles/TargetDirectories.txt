@@ -1,0 +1,3 @@
+/home/shi/lidar_camera_uav_code_remote/upsample/build/CMakeFiles/rebuild_cache.dir
+/home/shi/lidar_camera_uav_code_remote/upsample/build/CMakeFiles/imageBasics.dir
+/home/shi/lidar_camera_uav_code_remote/upsample/build/CMakeFiles/edit_cache.dir

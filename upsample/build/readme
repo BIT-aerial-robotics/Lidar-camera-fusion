@@ -1,0 +1,23 @@
+run :
+cmake ..
+make
+./imageBasics 000.png 001.png
+
+
+bulid/
+000.png and 001.png are original pictures.
+00, 01,02,03,04.png are road pictures used for testing.
+1,2,3,4,5.png are wrong pictures.
+
+bulid/ori_pic_data/
+more original pictures 
+
+bulid/matlab/data/
+input files of 5 coordinates
+
+bulid/datapic_roadtest/
+data and pictures used for road testing.
+
+已修正阴影的问题，结果看起来是上采样结果中负值越多，效果越好
+8-27结果：x方向上结果最好
+问题：1点云过于稀疏 2 z方向的边缘没有处理好

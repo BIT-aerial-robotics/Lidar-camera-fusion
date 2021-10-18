@@ -1,0 +1,3 @@
+/home/shi/lidar_camera_uav_code_remote/interpolation/build/CMakeFiles/rebuild_cache.dir
+/home/shi/lidar_camera_uav_code_remote/interpolation/build/CMakeFiles/edit_cache.dir
+/home/shi/lidar_camera_uav_code_remote/interpolation/build/CMakeFiles/interpolation.dir
