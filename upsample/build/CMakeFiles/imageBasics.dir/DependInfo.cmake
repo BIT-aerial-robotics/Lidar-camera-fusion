@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/shi/lidar_camera_uav_code_remote/upsample/src/imageBasics.cpp" "/home/shi/lidar_camera_uav_code_remote/upsample/build/CMakeFiles/imageBasics.dir/src/imageBasics.cpp.o"
-  "/home/shi/lidar_camera_uav_code_remote/upsample/src/upsample.cpp" "/home/shi/lidar_camera_uav_code_remote/upsample/build/CMakeFiles/imageBasics.dir/src/upsample.cpp.o"
+  "/home/yu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample/src/imageBasics.cpp" "/home/yu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample/build/CMakeFiles/imageBasics.dir/src/imageBasics.cpp.o"
+  "/home/yu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample/src/upsample.cpp" "/home/yu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample/build/CMakeFiles/imageBasics.dir/src/upsample.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

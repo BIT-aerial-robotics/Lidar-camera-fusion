@@ -6,8 +6,10 @@
 
 #IncludeRegexTransform: 
 
-/home/shi/lidar_camera_uav_code_remote/upsample/src/imageBasics.cpp
+/home/yu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample/src/imageBasics.cpp
 iostream
+-
+algorithm
 -
 vector
 -
@@ -19,16 +21,18 @@ opencv2/core/core.hpp
 -
 opencv2/highgui/highgui.hpp
 -
+Eigen/Dense
+-
 opencv2/opencv.hpp
 -
 upsample.h
-/home/shi/lidar_camera_uav_code_remote/upsample/src/upsample.h
+/home/yu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample/src/upsample.h
 imageBasics.h
-/home/shi/lidar_camera_uav_code_remote/upsample/src/imageBasics.h
+/home/yu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample/src/imageBasics.h
 
-/home/shi/lidar_camera_uav_code_remote/upsample/src/imageBasics.h
+/home/yu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample/src/imageBasics.h
 
-/home/shi/lidar_camera_uav_code_remote/upsample/src/upsample.cpp
+/home/yu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample/src/upsample.cpp
 iostream
 -
 chrono
@@ -42,7 +46,7 @@ opencv2/core/core.hpp
 opencv2/highgui/highgui.hpp
 -
 
-/home/shi/lidar_camera_uav_code_remote/upsample/src/upsample.h
+/home/yu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample/src/upsample.h
 
 /usr/local/include/opencv4/opencv2/calib3d.hpp
 opencv2/core.hpp

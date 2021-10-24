@@ -16,6 +16,7 @@
  */
 
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <fstream>
 #include <chrono>
@@ -121,7 +122,7 @@ int main(int argc, char **argv) {
   sprintf(filename_ima, "./%03d.png", v);
   image = cv::imread(filename_ima);
 
-  image = cv::imread(argv[1]); 
+  //image = cv::imread(argv[1]); 
   Eigen::Vector2d uu;
   uu << 0,1;
  
@@ -147,6 +148,7 @@ int main(int argc, char **argv) {
   chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
 
   cv::Mat image_upsample  = image.clone();//clone original image used for upsampling
+  double ima3d[image.cols][image.rows][3];
 
   unsigned int Dx_i;
   unsigned int Dy_i;
@@ -230,16 +232,28 @@ int main(int argc, char **argv) {
           data_ptr[0] = Dx_i; 
           data_ptr[1] = Dy_i; 
           data_ptr[2] = Dz_i; 
+          
+	  ima3d[u][v][0] = Dx_i; 
+          ima3d[u][v][1] = Dy_i; 
+          ima3d[u][v][2] = Dz_i; 
 		}
 	  }
-	  pv_ori_zone = pv_ori_zone + 5;
+	  pv_ori_zone = pv_ori_zone + 1;
 	  if(pv_ori_zone + 5 >= image.rows) {
 		  pv_ori_zone = 0;
 		  break;
 	  }
 	}
-	pu_ori_zone = pu_ori_zone + 5;
+	pu_ori_zone = pu_ori_zone + 1;
   }
+	double minv, maxv;
+	cv::Point pt_min, pt_max;
+	cv::minMaxLoc(image_upsample, &minv, &maxv);
+	cout << "minv = " << minv << endl;
+	cout << "idx_min = " << pt_min << endl;
+	cout << "maxv = " << maxv << endl;
+	cout << "idx_max = " << pt_max << endl;
+
   chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
   chrono::duration<double> time_used = chrono::duration_cast < chrono::duration < double >> (t2 - t1);
   cout << "Total time in upsampling: " << time_used.count() << " s." << endl;
