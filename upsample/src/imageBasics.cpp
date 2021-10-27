@@ -80,6 +80,10 @@ int main(int argc, char **argv) {
   if  (thispoint.y_3d < c_ori_min[1]) { c_ori_min[1] = thispoint.y_3d ; }
   if  (thispoint.z_3d < c_ori_min[2]) { c_ori_min[2] = thispoint.z_3d ; }
 
+  if  (thispoint.x_3d> mr_x) { mr_x = thispoint.x_3d; }
+  if  (thispoint.y_3d> mr_y) { mr_y = thispoint.y_3d; }
+  if  (thispoint.z_3d> mr_z) { mr_z = thispoint.z_3d; }
+
   	line_no++;
   }
   //cout << "line number: " << line_no << endl; 
@@ -90,6 +94,7 @@ int main(int argc, char **argv) {
   cout << "c_ori_min, x:  " << c_ori_min[0] << endl; 
   cout << "c_ori_min, y:  " << c_ori_min[1] << endl; 
   cout << "c_ori_min, z:  " << c_ori_min[2] << endl; 
+
 
   ifstream infile2;
   char filename2[50];
@@ -148,12 +153,18 @@ int main(int argc, char **argv) {
   chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
 
   cv::Mat image_upsample  = image.clone();//clone original image used for upsampling
-  double ima3d[image.cols][image.rows][3];
+  double* ima3d = (double*)malloc(sizeof(double)*(image.rows*image.cols*3));
 
-  unsigned int Dx_i;
-  unsigned int Dy_i;
-  unsigned int Dz_i;
+  double maxima3d[3] = {0,0,0};
+
+//  unsigned int Dx_i;
+//  unsigned int Dy_i;
+//  unsigned int Dz_i;
   
+  double Dx_i;
+  double Dy_i;
+  double Dz_i;
+
 
   unsigned long pu_ori_zone = 0, pv_ori_zone = 0; 
    //pc_array_zonei.swap(vector<pointcoordinate>());
@@ -171,24 +182,25 @@ int main(int argc, char **argv) {
         pointcoordinate thispoint_zone;
 
         thispoint_zone = pc_array[i_pc];
-        thispoint_zone.x_3d = (pc_array[i_pc].x_3d)*10;
-        thispoint_zone.y_3d = (pc_array[i_pc].y_3d - c_ori_min[1])*5;
-        thispoint_zone.z_3d = (pc_array[i_pc].z_3d - c_ori_min[2])*50;
+//        thispoint_zone.x_3d = (pc_array[i_pc].x_3d)*10;
+//        thispoint_zone.y_3d = (pc_array[i_pc].y_3d - c_ori_min[1])*5;
+//        thispoint_zone.z_3d = (pc_array[i_pc].z_3d - c_ori_min[2])*50;
+
         thispoint_zone.print();
         pc_array_zonei.push_back(thispoint_zone); 
 	    }	
 	  }
 
   //find the max-value in 5*5.
-    for (int k=0; k<pc_array_zonei.size(); k=k+1){
-    double dx = pc_array_zonei[k].x_3d;
-    double dy = pc_array_zonei[k].y_3d;
-    double dz = pc_array_zonei[k].z_3d;
-
-  if  (fabs(dx) > mr_x) { mr_x = fabs(dx); }
-  if  (fabs(dy)> mr_y) { mr_y = fabs(dy); }
-  if  (fabs(dz) > mr_z) { mr_z = fabs(dz); }
-  }
+//    for (int k=0; k<pc_array_zonei.size(); k=k+1){
+//    double dx = pc_array_zonei[k].x_3d;
+//    double dy = pc_array_zonei[k].y_3d;
+//    double dz = pc_array_zonei[k].z_3d;
+//
+//  if  (fabs(dx) > mr_x) { mr_x = fabs(dx); }
+//  if  (fabs(dy)> mr_y) { mr_y = fabs(dy); }
+//  if  (fabs(dz) > mr_z) { mr_z = fabs(dz); }
+//  }
       
 	  //upsampling process: 
 	  for(int v = pv_ori_zone; v < (5 + pv_ori_zone); v++){
@@ -227,15 +239,25 @@ int main(int argc, char **argv) {
           Dy_i = Y_y/S_y;
           Dz_i = Y_z/S_z;
         
-          unsigned char *row_ptr = image_upsample.ptr<unsigned char>(v);  // row_ptr is the pointer pointing to row u
-          unsigned char *data_ptr = &row_ptr[u * image_upsample.channels()]; // data_ptr points to the pixel data to be accessed
-          data_ptr[0] = Dx_i; 
-          data_ptr[1] = Dy_i; 
-          data_ptr[2] = Dz_i; 
+//          unsigned char *row_ptr = image_upsample.ptr<unsigned char>(v);  // row_ptr is the pointer pointing to row u
+//          unsigned char *data_ptr = &row_ptr[u * image_upsample.channels()]; // data_ptr points to the pixel data to be accessed
+//          data_ptr[0] = Dx_i;
+//          data_ptr[1] = Dy_i;
+//          data_ptr[2] = Dz_i;
           
-	  ima3d[u][v][0] = Dx_i; 
-          ima3d[u][v][1] = Dy_i; 
-          ima3d[u][v][2] = Dz_i; 
+          if(maxima3d[0] < Dx_i ) (maxima3d[0] = Dx_i) ;
+          if(maxima3d[1] < Dy_i ) (maxima3d[1] = Dy_i) ;
+          if(maxima3d[2] < Dz_i ) (maxima3d[2] = Dz_i) ;
+
+//	      ima3d[u][v][0] = Dx_i;
+//          ima3d[u][v][1] = Dy_i;
+//          ima3d[u][v][2] = Dz_i;
+          ima3d[v*image.cols*3 + u*3] = Dx_i;
+		  ima3d[v*image.cols*3 + u*3 +1] = Dy_i;
+		  ima3d[v*image.cols*3 + u*3 +2] = Dz_i;
+
+		  cout << "test line i" <<  endl;
+
 		}
 	  }
 	  pv_ori_zone = pv_ori_zone + 1;
@@ -246,13 +268,27 @@ int main(int argc, char **argv) {
 	}
 	pu_ori_zone = pu_ori_zone + 1;
   }
-	double minv, maxv;
-	cv::Point pt_min, pt_max;
-	cv::minMaxLoc(image_upsample, &minv, &maxv);
-	cout << "minv = " << minv << endl;
-	cout << "idx_min = " << pt_min << endl;
-	cout << "maxv = " << maxv << endl;
-	cout << "idx_max = " << pt_max << endl;
+
+  cout << "test line" <<  endl;
+
+  for(int vali = 0; vali < image.rows; vali++)
+	  for(int uali = 0; uali < image.cols; uali++){
+          unsigned char *row_ptr = image_upsample.ptr<unsigned char>(vali);  // row_ptr is the pointer pointing to row vali
+          unsigned char *data_ptr = &row_ptr[uali * image_upsample.channels()]; // data_ptr points to the pixel data to be accessed
+          data_ptr[0] = static_cast<unsigned char>(255*ima3d[vali*image.cols*3 + uali*3]/maxima3d[0]);
+          data_ptr[1] = static_cast<unsigned char>(255*ima3d[vali*image.cols*3 + uali*3 + 1]/maxima3d[1]);
+          data_ptr[2] = static_cast<unsigned char>(255*ima3d[vali*image.cols*3 + uali*3 + 2]/maxima3d[2]);
+	  }
+
+  free(ima3d);
+
+//	double minv, maxv;
+//	cv::Point pt_min, pt_max;
+//	cv::minMaxLoc(image_upsample, &minv, &maxv);
+//	cout << "minv = " << minv << endl;
+//	cout << "idx_min = " << pt_min << endl;
+//	cout << "maxv = " << maxv << endl;
+//	cout << "idx_max = " << pt_max << endl;
 
   chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
   chrono::duration<double> time_used = chrono::duration_cast < chrono::duration < double >> (t2 - t1);
