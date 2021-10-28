@@ -90,7 +90,6 @@ int main(int argc, char **argv) {
   infile.close(); 
   //close file stream 
 
-
   cout << "c_ori_min, x:  " << c_ori_min[0] << endl; 
   cout << "c_ori_min, y:  " << c_ori_min[1] << endl; 
   cout << "c_ori_min, z:  " << c_ori_min[2] << endl; 
@@ -122,6 +121,13 @@ int main(int argc, char **argv) {
   	line_no_2++;
   }
   infile2.close();   
+
+  sort(pc_array.begin(),pc_array.end(),compare_pc_v);
+
+  int minrow = 0;
+  minrow = static_cast<int> (pc_array[0].v_px);  //the minimum v coordinate of the points
+  cout << "minrow:" << minrow << endl;
+  cout << "pc_array[0].v_px:" << pc_array[0].v_px << endl;
 
   char filename_ima[50];
   sprintf(filename_ima, "./%03d.png", v);
@@ -157,18 +163,83 @@ int main(int argc, char **argv) {
 
   double maxima3d[3] = {0,0,0};
 
-//  unsigned int Dx_i;
-//  unsigned int Dy_i;
-//  unsigned int Dz_i;
-  
   double Dx_i;
   double Dy_i;
   double Dz_i;
 
+  int kin = 0;
+  int grid = 5;
+  int sd = pc_array.size();
+
+  for (int v=0; v<image.rows - minrow; v=v+1)
+  {
+   for (int u=0; u<image.cols; u=u+1)
+   {
+	   S_x=0; Y_x=0;
+	   S_y=0; Y_y=0;
+	   S_z=0; Y_z=0;
+
+       for (int k=kin; k<sd; k=k+1)
+       {
+              if( pc_array[k].v_px <= v + minrow -grid) { kin=k; }
+              if( pc_array[k].v_px >= v + minrow +grid) { break; }
+
+          if ( pc_array[k].u_px > u-grid && pc_array[k].u_px < u+grid && pc_array[k].v_px > v+ minrow -grid && pc_array[k].v_px < v+ minrow +grid )
+          {
+              double pu = pc_array[k].u_px;
+              double pv = pc_array[k].v_px;
+              double dx = pc_array[k].x_3d;
+              double dy = pc_array[k].y_3d;
+              double dz = pc_array[k].z_3d;
+              Gr_x = dx/mr_x;
+              Gr_y = dy/mr_y;
+              Gr_z = dz/mr_z;
+              Gs =  ( (u - pu)*(u - pu) + (v-pv)*(v-pv) );
+              Wp_x = 1/sqrt(Gs*Gr_x);
+              Wp_y = 1/sqrt(Gs*Gr_y);
+              Wp_z = 1/sqrt(Gs*Gr_z);
+              S_x = S_x + Wp_x;
+              S_y = S_y + Wp_y;
+              S_z = S_z + Wp_z;
+              Y_x = Y_x + Wp_x*dx;
+              Y_y = Y_y + Wp_y*dy;
+              Y_z = Y_z + Wp_z*dz;
+
+//              Gr = x[k+2*sd]/mr;
+//              //Gs =  sqrt( (u - x[k])*(u - x[k]) + (v+dim[0]-x[k+sd])*(v+dim[0]-x[k+sd]) );
+//              Gs =  ( (u - x[k])*(u - x[k]) + (v+dim[0]-x[k+sd])*(v+dim[0]-x[k+sd]) );
+//              WGain = 1/sqrt(Gs*Gr);
+//              //mexPrintf("Filter Gain = %f\n",WGain);
+//              S = S + WGain;
+//              Y = Y + WGain*(x[k+2*sd]);
+          }
+       }
+//      if (S==0) {S=1;}
+//      y[u*(int)dim[1]  + v] = Y/S;
+
+      if (S_x==0) {S_x=1;}
+      if (S_y==0) {S_y=1;}
+      if (S_z==0) {S_z=1;}
+
+      Dx_i = Y_x/S_x;
+      Dy_i = Y_y/S_y;
+      Dz_i = Y_z/S_z;
+
+      if(maxima3d[0] < Dx_i ) (maxima3d[0] = Dx_i) ;
+      if(maxima3d[1] < Dy_i ) (maxima3d[1] = Dy_i) ;
+      if(maxima3d[2] < Dz_i ) (maxima3d[2] = Dz_i) ;
+
+      ima3d[(v+minrow)*image.cols*3 + u*3] = Dx_i;
+	  ima3d[(v+minrow)*image.cols*3 + u*3 +1] = Dy_i;
+	  ima3d[(v+minrow)*image.cols*3 + u*3 +2] = Dz_i;
+
+   }
+  }
+
 
   unsigned long pu_ori_zone = 0, pv_ori_zone = 0; 
    //pc_array_zonei.swap(vector<pointcoordinate>());
-  while(pu_ori_zone + 5 < image.cols) {
+  /*while(pu_ori_zone + 5 < image.cols) {
 	while(pv_ori_zone + 5 < image.rows) {
       vector<pointcoordinate> pc_array_zonei;	
       for(int i_pc = 0; i_pc < pc_array.size(); i_pc++){
@@ -239,7 +310,7 @@ int main(int argc, char **argv) {
           Dy_i = Y_y/S_y;
           Dz_i = Y_z/S_z;
         
-//          unsigned char *row_ptr = image_upsample.ptr<unsigned char>(v);  // row_ptr is the pointer pointing to row u
+//          unsigned char *row_ptr = image_upsample.ptr<unsigned char>(v);  // row_ptr is the pointer pointing to row v
 //          unsigned char *data_ptr = &row_ptr[u * image_upsample.channels()]; // data_ptr points to the pixel data to be accessed
 //          data_ptr[0] = Dx_i;
 //          data_ptr[1] = Dy_i;
@@ -268,6 +339,7 @@ int main(int argc, char **argv) {
 	}
 	pu_ori_zone = pu_ori_zone + 1;
   }
+  */
 
   cout << "test line" <<  endl;
 
