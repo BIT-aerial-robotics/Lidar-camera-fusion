@@ -1,4 +1,4 @@
-# Install script for directory: /home/yu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample
+# Install script for directory: /home/yushu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/yu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/yushu/lidar_camera_uav_code/inorg/Lidar-camera-fusion/upsample/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
