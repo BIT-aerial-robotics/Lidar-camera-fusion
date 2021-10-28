@@ -36,8 +36,35 @@ int main(int argc, char **argv) {
   
   cv::Mat image;
   cv::Mat image_upsample_grey;
-	
+
+
   for(int v=0;v<2;v++){
+
+	  char filename_ima[50];
+	  sprintf(filename_ima, "./%03d.png", v);
+	  image = cv::imread(filename_ima);
+
+	  //image = cv::imread(argv[1]);
+	  Eigen::Vector2d uu;
+	  uu << 0,1;
+
+	  if (image.data == nullptr) {
+	    cerr << "File" << argv[1] << "does not exist. " << endl;
+	    return 0;
+	  }
+	  argv++;
+
+	  cout << "width:" << image.cols << ",height: " << image.rows << ",channels:" << image.channels() << endl;
+	  cv::imshow("image", image);
+	  cv::waitKey(0);
+
+
+	  if (image.type() != CV_8UC1 && image.type() != CV_8UC3) {
+
+	    cout << "Please enter a color image or grayscale image." << endl;
+	    return 0;
+	  }
+
     ifstream infile;
   char filename[50];
   sprintf(filename, "./matlab 828/%010d.pngvelo_data", v);
@@ -108,6 +135,7 @@ int main(int argc, char **argv) {
 
   string buf2;
   unsigned long line_no_2 = 0;	
+  auto itr = pc_array.begin();
   
   while (getline(infile2,buf2))
   {
@@ -115,10 +143,27 @@ int main(int argc, char **argv) {
   	string s1 = buf2.substr(0, index);
   	string s2 = buf2.substr(index+1, buf2.length()-index-1);
   	//cout << "s1:" << s1 << ", s2:" << s2 << ", s3: " << s3 << ", s4: " << s4 << endl;
-    pc_array[line_no_2].u_px = stof(s1,0); 
-    pc_array[line_no_2].v_px = stof(s2,0); 
+    //pc_array[line_no_2].u_px = stof(s1,0);
+    //pc_array[line_no_2].v_px = stof(s2,0);
     //pc_array[line_no_2].print();
-  	line_no_2++;
+    double u_px, v_px;
+    u_px = stof(s1,0);
+    v_px = stof(s2,0);
+
+    if(  u_px > 0  && (int)u_px <= image.cols &&  v_px > 0  && (int)v_px <= image.rows ){
+    	pointcoordinate thispoint_rev = *itr;
+    	thispoint_rev.u_px = u_px;
+    	thispoint_rev.v_px = v_px;
+        *itr = thispoint_rev;
+        itr++;
+        cout << "test:" << endl;
+
+    }
+    else{
+    	pc_array.erase(itr);
+    }
+  	//line_no_2++;
+
   }
   infile2.close();   
 
@@ -127,32 +172,32 @@ int main(int argc, char **argv) {
   int minrow = 0;
   minrow = static_cast<int> (pc_array[0].v_px);  //the minimum v coordinate of the points
   cout << "minrow:" << minrow << endl;
-  cout << "pc_array[0].v_px:" << pc_array[0].v_px << endl;
+  cout << "size of pc: " << pc_array.size() << endl;
 
-  char filename_ima[50];
-  sprintf(filename_ima, "./%03d.png", v);
-  image = cv::imread(filename_ima);
-
-  //image = cv::imread(argv[1]); 
-  Eigen::Vector2d uu;
-  uu << 0,1;
- 
-  if (image.data == nullptr) { 
-    cerr << "File" << argv[1] << "does not exist. " << endl;
-    return 0;
-  }
-  argv++;
-  
-  cout << "width:" << image.cols << ",height: " << image.rows << ",channels:" << image.channels() << endl;
-  cv::imshow("image", image);      
-  cv::waitKey(0);                  
-
- 
-  if (image.type() != CV_8UC1 && image.type() != CV_8UC3) {
-    
-    cout << "Please enter a color image or grayscale image." << endl;
-    return 0;
-  }
+//  char filename_ima[50];
+//  sprintf(filename_ima, "./%03d.png", v);
+//  image = cv::imread(filename_ima);
+//
+//  //image = cv::imread(argv[1]);
+//  Eigen::Vector2d uu;
+//  uu << 0,1;
+//
+//  if (image.data == nullptr) {
+//    cerr << "File" << argv[1] << "does not exist. " << endl;
+//    return 0;
+//  }
+//  argv++;
+//
+//  cout << "width:" << image.cols << ",height: " << image.rows << ",channels:" << image.channels() << endl;
+//  cv::imshow("image", image);
+//  cv::waitKey(0);
+//
+//
+//  if (image.type() != CV_8UC1 && image.type() != CV_8UC3) {
+//
+//    cout << "Please enter a color image or grayscale image." << endl;
+//    return 0;
+//  }
 
 //Traverse the image, please note that the following traversal methods can also be used for random pixel access
   // Use std::chrono to time the algorithm
@@ -168,7 +213,7 @@ int main(int argc, char **argv) {
   double Dz_i;
 
   int kin = 0;
-  int grid = 5;
+  int grid = 2;
   int sd = pc_array.size();
 
   for (int v=0; v<image.rows - minrow; v=v+1)
