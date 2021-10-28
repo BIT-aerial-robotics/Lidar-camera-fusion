@@ -156,7 +156,7 @@ int main(int argc, char **argv) {
     	thispoint_rev.v_px = v_px;
         *itr = thispoint_rev;
         itr++;
-        cout << "test:" << endl;
+        //cout << "test:" << endl;
 
     }
     else{
@@ -213,7 +213,7 @@ int main(int argc, char **argv) {
   double Dz_i;
 
   int kin = 0;
-  int grid = 2;
+  int grid = 4;
   int sd = pc_array.size();
 
   for (int v=0; v<image.rows - minrow; v=v+1)
@@ -234,8 +234,8 @@ int main(int argc, char **argv) {
               double pu = pc_array[k].u_px;
               double pv = pc_array[k].v_px;
               double dx = pc_array[k].x_3d;
-              double dy = pc_array[k].y_3d;
-              double dz = pc_array[k].z_3d;
+              double dy = pc_array[k].y_3d - c_ori_min[1];
+              double dz = pc_array[k].z_3d - c_ori_min[2];
               Gr_x = dx/mr_x;
               Gr_y = dy/mr_y;
               Gr_z = dz/mr_z;
@@ -414,7 +414,8 @@ int main(int argc, char **argv) {
   char pic0[50];
   sprintf(pic0, "./savepic/%02dimage_upsample.png",v);
   cv::cvtColor(image_upsample, image_upsample_grey, cv::COLOR_BGR2GRAY);
-  cv::imshow("image_upsample", image_upsample_grey);
+  //cv::imshow("image_upsample", image_upsample_grey);
+  cv::imshow("image_upsample", image_upsample);
   cv::imwrite(pic0, image_upsample_grey); //save the image 
   cv::waitKey(0);
   cv::Mat channel[3];
